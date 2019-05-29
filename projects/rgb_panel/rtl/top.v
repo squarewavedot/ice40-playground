@@ -33,8 +33,8 @@
 
 `default_nettype none
 
-//`define STREAM
-`define PATTERN
+`define STREAM
+//`define PATTERN
 //`define VIDEO
 
 module top (
@@ -71,7 +71,7 @@ module top (
 	// Params
 	localparam integer N_BANKS  = 2;
 	localparam integer N_ROWS   = 32;
-	localparam integer N_COLS   = 64;
+	localparam integer N_COLS   = 384;
 	localparam integer N_CHANS  = 3;
 	localparam integer N_PLANES = 10;
 	localparam integer BITDEPTH = 16;
@@ -100,6 +100,7 @@ module top (
 	wire fbw_row_rdy;
 	wire fbw_row_swap;
 
+	wire [23:0] fbw_data_spi;
 	wire [BITDEPTH-1:0] fbw_data;
 	wire [LOG_N_COLS-1:0] fbw_col_addr;
 	wire fbw_wren;
@@ -149,7 +150,7 @@ module top (
 	vstream #(
 		.N_ROWS(N_BANKS * N_ROWS),
 		.N_COLS(N_COLS),
-		.BITDEPTH(BITDEPTH)
+		.BITDEPTH(24)
 	) stream_I (
 		.spi_mosi(slave_mosi),
 		.spi_miso(slave_miso),
@@ -159,7 +160,7 @@ module top (
 		.fbw_row_store(fbw_row_store),
 		.fbw_row_rdy(fbw_row_rdy),
 		.fbw_row_swap(fbw_row_swap),
-		.fbw_data(fbw_data),
+		.fbw_data(fbw_data_spi),
 		.fbw_col_addr(fbw_col_addr),
 		.fbw_wren(fbw_wren),
 		.frame_swap(frame_swap),
@@ -167,6 +168,12 @@ module top (
 		.clk(clk),
 		.rst(rst)
 	);
+
+	assign fbw_data = {
+		fbw_data_spi[23:19],
+		fbw_data_spi[15:10],
+		fbw_data_spi[ 7: 3]
+	};
 `endif
 
 

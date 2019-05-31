@@ -100,7 +100,7 @@ module top (
 	wire fbw_row_rdy;
 	wire fbw_row_swap;
 
-	wire [23:0] fbw_data_spi;
+	//wire [23:0] fbw_data_spi;
 	wire [BITDEPTH-1:0] fbw_data;
 	wire [LOG_N_COLS-1:0] fbw_col_addr;
 	wire fbw_wren;
@@ -138,7 +138,8 @@ module top (
 		.cfg_pre_latch_len(8'h80),
 		.cfg_latch_len(8'h80),
 		.cfg_post_latch_len(8'h80),
-		.cfg_bcm_bit_len(8'h06),
+		//.cfg_bcm_bit_len(8'h06), 
+		.cfg_bcm_bit_len(8'h02), //for faster refresh rate, 24mhz panel
 		.clk(clk),
 		.rst(rst)
 	);
@@ -150,7 +151,7 @@ module top (
 	vstream #(
 		.N_ROWS(N_BANKS * N_ROWS),
 		.N_COLS(N_COLS),
-		.BITDEPTH(24)
+		.BITDEPTH(BITDEPTH)
 	) stream_I (
 		.spi_mosi(slave_mosi),
 		.spi_miso(slave_miso),
@@ -160,7 +161,7 @@ module top (
 		.fbw_row_store(fbw_row_store),
 		.fbw_row_rdy(fbw_row_rdy),
 		.fbw_row_swap(fbw_row_swap),
-		.fbw_data(fbw_data_spi),
+		.fbw_data(fbw_data),
 		.fbw_col_addr(fbw_col_addr),
 		.fbw_wren(fbw_wren),
 		.frame_swap(frame_swap),
@@ -169,11 +170,11 @@ module top (
 		.rst(rst)
 	);
 
-	assign fbw_data = {
-		fbw_data_spi[23:19],
-		fbw_data_spi[15:10],
-		fbw_data_spi[ 7: 3]
-	};
+//	assign fbw_data = {
+//		fbw_data_spi[23:19],
+//		fbw_data_spi[15:10],
+//		fbw_data_spi[ 7: 3]
+//	};
 `endif
 
 

@@ -55,7 +55,8 @@ module sysmgr (
 `else
 	SB_PLL40_PAD #(
 		.DIVR(4'b0000),
-		.DIVF(7'b0111111),
+		.DIVF(7'b0111111), // 24Mhz Panel
+		//.DIVF(7'b1001111), // 30Mhz Panel
 		.DIVQ(3'b101),
 		.FILTER_RANGE(3'b001),
 		.FEEDBACK_PATH("SIMPLE"),
